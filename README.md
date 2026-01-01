@@ -1,73 +1,87 @@
-# Welcome to your Lovable project
+# Expense Tracker
 
-## Project info
+A comprehensive full-stack expense tracking application designed to help you manage your finances, track spending habits, and set budgets. Built with a modern React frontend and a robust Node.js/Express backend.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Features
 
-## How can I edit this code?
+- **Dashboard**: Real-time overview of your finances with visual analytics, savings rates, and transaction summaries.
+- **Expense Tracking**: Log daily expenses with categories, dates, and a unique "Worthiness" feature to analyze if a purchase was truly worth it.
+- **Income Management**: Track various income sources to calculate total savings.
+- **Budget Management**: Set monthly budgets for specific categories (e.g., Food, Transport) and track your spending progress against limits.
+- **Analytics**: Visualize spending patterns and "Worthy vs. Unworthy" expense breakdown.
+- **Secure Authentication**: User signup and login functionality protected by JWT.
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+### Frontend
+- **Framework**: React with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **State Management**: React Hooks & Context
+- **Charts**: Recharts
+- **HTTP Client**: Axios
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Backend
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: MongoDB with Mongoose
+- **Authentication**: JSON Web Tokens (JWT)
 
-Changes made via Lovable will be committed automatically to this repo.
+## Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB (Local instance or Atlas connection)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd expense_tracker
+   ```
 
-Follow these steps:
+2. **Backend Setup**
+   Navigate to the server directory and install dependencies:
+   ```bash
+   cd server
+   npm install
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+   Create a `.env` file in the `server` directory with the following variables:
+   ```env
+   PORT=5000
+   MONGO_URI=your_mongodb_connection_string
+   JWT_SECRET=your_super_secret_key
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+   Start the backend server:
+   ```bash
+   npm run dev
+   ```
+   
+   *(Optional)* Seed the database with dummy data:
+   ```bash
+   node seeder.js
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. **Frontend Setup**
+   Open a new terminal, navigate to the project root, and install dependencies:
+   ```bash
+   # From the project root
+   npm install
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+   Start the frontend development server:
+   ```bash
+   npm run dev
+   ```
 
-**Edit a file directly in GitHub**
+4. **Access the Application**
+   Open your browser and go to `http://localhost:8080` (or the port provided by Vite).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Project Structure
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- `src/` - Frontend source code (Pages, Components, Context, API hooks)
+- `server/` - Backend source code (Models, Controllers, Routes, Config)
