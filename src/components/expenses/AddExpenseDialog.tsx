@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { categories } from '@/lib/categories';
-import { ExpenseCategory } from '@/types';
+import { ExpenseCategory, Expense } from '@/types';
 import { toast } from 'sonner';
 
 interface AddExpenseDialogProps {
@@ -32,17 +32,38 @@ interface AddExpenseDialogProps {
     date: Date;
     notes?: string;
     isWorthy: boolean;
+    id?: string;
   }) => void;
+  expenseToEdit?: Expense | null;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export const AddExpenseDialog = ({ onAdd }: AddExpenseDialogProps) => {
-  const [open, setOpen] = useState(false);
+export const AddExpenseDialog = ({ onAdd, expenseToEdit, open: controlledOpen, onOpenChange }: AddExpenseDialogProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState<ExpenseCategory>('other');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
   const [isWorthy, setIsWorthy] = useState<boolean>(true);
+
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = isControlled ? onOpenChange : setInternalOpen;
+
+  useEffect(() => {
+    if (expenseToEdit) {
+      setAmount(expenseToEdit.amount.toString());
+      setCategory(expenseToEdit.category);
+      setDescription(expenseToEdit.description);
+      setDate(new Date(expenseToEdit.date).toISOString().split('T')[0]);
+      setNotes(expenseToEdit.notes || '');
+      setIsWorthy(expenseToEdit.isWorthy || false);
+    } else if (!open) {
+      resetForm();
+    }
+  }, [expenseToEdit, open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,10 +80,11 @@ export const AddExpenseDialog = ({ onAdd }: AddExpenseDialogProps) => {
       date: new Date(date),
       notes: notes || undefined,
       isWorthy,
+      id: expenseToEdit?.id,
     });
 
-    toast.success('Expense added successfully');
-    setOpen(false);
+    // toast.success(expenseToEdit ? 'Expense updated successfully' : 'Expense added successfully'); // Handled by parent
+    if (setOpen) setOpen(false);
     resetForm();
   };
 
@@ -77,17 +99,19 @@ export const AddExpenseDialog = ({ onAdd }: AddExpenseDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="btn-primary">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Expense
-        </Button>
-      </DialogTrigger>
+      {!isControlled && (
+        <DialogTrigger asChild>
+          <Button className="btn-primary">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Expense
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="bg-card border-border sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-foreground">Add New Expense</DialogTitle>
+          <DialogTitle className="text-foreground">{expenseToEdit ? 'Edit Expense' : 'Add New Expense'}</DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Track a new expense by filling out the details below.
+            {expenseToEdit ? 'Update the details of your expense.' : 'Track a new expense by filling out the details below.'}
           </DialogDescription>
         </DialogHeader>
 

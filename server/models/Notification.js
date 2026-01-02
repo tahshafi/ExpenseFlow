@@ -1,35 +1,27 @@
 import mongoose from 'mongoose';
 
-const incomeSchema = new mongoose.Schema({
+const notificationSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  amount: {
-    type: Number,
-    required: true,
-  },
-  source: {
+  title: {
     type: String,
     required: true,
   },
-  description: {
+  message: {
     type: String,
     required: true,
   },
-  date: {
-    type: Date,
-    required: true,
-    default: Date.now,
-  },
-  isRecurring: {
+  isRead: {
     type: Boolean,
     default: false,
   },
-  recurringFrequency: {
+  type: {
     type: String,
-    enum: ['weekly', 'biweekly', 'monthly', 'yearly'],
+    enum: ['info', 'success', 'warning', 'error'],
+    default: 'info',
   },
 }, { 
   timestamps: true,
@@ -42,5 +34,5 @@ const incomeSchema = new mongoose.Schema({
   }
 });
 
-const Income = mongoose.model('Income', incomeSchema);
-export default Income;
+const Notification = mongoose.model('Notification', notificationSchema);
+export default Notification;

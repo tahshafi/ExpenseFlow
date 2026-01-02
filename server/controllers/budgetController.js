@@ -1,5 +1,6 @@
 import Budget from '../models/Budget.js';
 import Expense from '../models/Expense.js';
+import { checkBudgetExceeded } from '../utils/budgetUtils.js';
 
 // @desc    Get budgets
 // @route   GET /api/budgets
@@ -69,6 +70,10 @@ export const addOrUpdateBudget = async (req, res) => {
     if (existingBudget) {
       existingBudget.amount = amount;
       const updatedBudget = await existingBudget.save();
+
+      // Check if updated budget is exceeded
+      await checkBudgetExceeded(req.user.id, category, month, year);
+
       const b = updatedBudget.toObject();
       return res.status(200).json({ ...b, id: b._id, spent });
     }

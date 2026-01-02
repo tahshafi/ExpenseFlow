@@ -34,7 +34,16 @@ const expenseSchema = new mongoose.Schema({
   tags: [{
     type: String,
   }],
-}, { timestamps: true });
+}, { 
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+      delete ret._id;
+    }
+  }
+});
 
 const Expense = mongoose.model('Expense', expenseSchema);
 export default Expense;

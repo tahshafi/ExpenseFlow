@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { Income } from '@/types';
 
 interface AddIncomeDialogProps {
   onAdd?: (income: {
@@ -29,17 +30,38 @@ interface AddIncomeDialogProps {
     date: Date;
     isRecurring: boolean;
     recurringFrequency?: 'weekly' | 'biweekly' | 'monthly' | 'yearly';
+    id?: string;
   }) => void;
+  incomeToEdit?: Income | null;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export const AddIncomeDialog = ({ onAdd }: AddIncomeDialogProps) => {
-  const [open, setOpen] = useState(false);
+export const AddIncomeDialog = ({ onAdd, incomeToEdit, open: controlledOpen, onOpenChange }: AddIncomeDialogProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [amount, setAmount] = useState('');
   const [source, setSource] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurringFrequency, setRecurringFrequency] = useState<'weekly' | 'biweekly' | 'monthly' | 'yearly'>('monthly');
+
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = isControlled ? onOpenChange : setInternalOpen;
+
+  useEffect(() => {
+    if (incomeToEdit) {
+      setAmount(incomeToEdit.amount.toString());
+      setSource(incomeToEdit.source);
+      setDescription(incomeToEdit.description);
+      setDate(new Date(incomeToEdit.date).toISOString().split('T')[0]);
+      setIsRecurring(incomeToEdit.isRecurring || false);
+      setRecurringFrequency(incomeToEdit.recurringFrequency || 'monthly');
+    } else if (!open) {
+      resetForm();
+    }
+  }, [incomeToEdit, open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,10 +78,11 @@ export const AddIncomeDialog = ({ onAdd }: AddIncomeDialogProps) => {
       date: new Date(date),
       isRecurring,
       recurringFrequency: isRecurring ? recurringFrequency : undefined,
+      id: incomeToEdit?.id,
     });
 
-    toast.success('Income added successfully');
-    setOpen(false);
+    // toast.success(incomeToEdit ? 'Income updated successfully' : 'Income added successfully');
+    if (setOpen) setOpen(false);
     resetForm();
   };
 
@@ -74,17 +97,19 @@ export const AddIncomeDialog = ({ onAdd }: AddIncomeDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="btn-primary">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Income
-        </Button>
-      </DialogTrigger>
+      {!isControlled && (
+        <DialogTrigger asChild>
+          <Button className="btn-primary">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Income
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="bg-card border-border sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-foreground">Add New Income</DialogTitle>
+          <DialogTitle className="text-foreground">{incomeToEdit ? 'Edit Income' : 'Add New Income'}</DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Track a new income source by filling out the details below.
+            {incomeToEdit ? 'Update the details of your income source.' : 'Track a new income source by filling out the details below.'}
           </DialogDescription>
         </DialogHeader>
 

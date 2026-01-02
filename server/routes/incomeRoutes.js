@@ -3,12 +3,13 @@ import {
   getIncome,
   addIncome,
   deleteIncome,
+  updateIncome,
 } from '../controllers/incomeController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 router.route('/').get(protect, getIncome).post(protect, addIncome);
-router.route('/:id').delete(protect, deleteIncome);
+router.route('/:id').delete(protect, deleteIncome).put(protect, updateIncome);
 
 export default router;

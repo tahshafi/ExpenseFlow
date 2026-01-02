@@ -36,6 +36,39 @@ export const addIncome = async (req, res) => {
   }
 };
 
+// @desc    Update income
+// @route   PUT /api/income/:id
+// @access  Private
+export const updateIncome = async (req, res) => {
+  try {
+    const income = await Income.findById(req.params.id);
+
+    if (!income) {
+      return res.status(404).json({ message: 'Income not found' });
+    }
+
+    // Check for user
+    if (!req.user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
+    // Make sure the logged in user matches the income user
+    if (income.userId.toString() !== req.user.id) {
+      return res.status(401).json({ message: 'User not authorized' });
+    }
+
+    const updatedIncome = await Income.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    res.status(200).json(updatedIncome);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 // @desc    Delete income
 // @route   DELETE /api/income/:id
 // @access  Private

@@ -10,11 +10,16 @@ import { TimeFilter, Expense } from '@/types';
 import { formatCurrency } from '@/lib/formatters';
 import { toast } from 'sonner';
 
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
 const Expenses = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('30d');
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchExpenses();
@@ -71,12 +76,49 @@ const Expenses = () => {
 
   const handleAddExpense = async (expense: any) => {
     try {
-      const { data } = await expensesApi.create(expense);
-      setExpenses([data, ...expenses]);
-      toast.success('Expense added successfully');
+      const expenseId = expense.id || expense._id;
+      let response;
+      if (expenseId) {
+        response = await expensesApi.update(expenseId, expense);
+      } else {
+        response = await expensesApi.create(expense);
+      }
+
+      const { data } = response;
+      
+      if (expenseId) {
+        setExpenses(expenses.map(e => (e.id === data.id || e._id === data.id) ? data : e));
+        toast.success('Expense updated successfully');
+      } else {
+        setExpenses([data, ...expenses]);
+        toast.success('Expense added successfully');
+      }
+      setIsDialogOpen(false);
+      setEditingExpense(null);
     } catch (error) {
       console.error(error);
-      toast.error('Failed to add expense');
+      toast.error('Failed to save expense');
+    }
+  };
+
+  const handleEdit = (expense: Expense) => {
+    setEditingExpense(expense);
+    setIsDialogOpen(true);
+  };
+
+  const handleDelete = async (expense: Expense) => {
+    try {
+      const expenseId = expense.id || expense._id;
+      if (!expenseId) {
+        toast.error('Invalid expense ID');
+        return;
+      }
+      await expensesApi.delete(expenseId);
+      setExpenses(expenses.filter(e => e.id !== expenseId && e._id !== expenseId));
+      toast.success('Expense deleted successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to delete expense');
     }
   };
 
@@ -85,7 +127,22 @@ const Expenses = () => {
       <PageHeader 
         title="Expenses" 
         description={`${filteredExpenses.length} transactions • Total: ${formatCurrency(totalAmount)}`}
-        actions={<AddExpenseDialog onAdd={handleAddExpense} />}
+        actions={
+          <Button className="btn-primary" onClick={() => setIsDialogOpen(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Expense
+          </Button>
+        }
+      />
+
+      <AddExpenseDialog 
+        onAdd={handleAddExpense} 
+        open={isDialogOpen} 
+        onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open) setEditingExpense(null);
+        }}
+        expenseToEdit={editingExpense}
       />
 
       <ExpenseFilters
@@ -100,18 +157,9 @@ const Expenses = () => {
       <WorthyAnalytics expenses={filteredExpenses} />
 
       <ExpenseTable 
-        expenses={filteredExpenses}
-        onEdit={(expense) => console.log('Edit:', expense)}
-        onDelete={async (expense) => {
-          try {
-            await expensesApi.delete(expense.id);
-            setExpenses(expenses.filter(e => e.id !== expense.id));
-            toast.success('Expense deleted successfully');
-          } catch (error) {
-            console.error(error);
-            toast.error('Failed to delete expense');
-          }
-        }}
+        expenses={filteredExpenses} 
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
     </MainLayout>
   );

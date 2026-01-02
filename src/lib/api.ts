@@ -38,6 +38,7 @@ export const expenses = {
 export const income = {
   getAll: () => api.get('/income'),
   create: (data: any) => api.post('/income', data),
+  update: (id: string, data: any) => api.put(`/income/${id}`, data),
   delete: (id: string) => api.delete(`/income/${id}`),
 };
 
@@ -46,6 +47,26 @@ export const budgets = {
   createOrUpdate: (data: any) => api.post('/budgets', data),
   update: (id: string, data: any) => api.put(`/budgets/${id}`, data),
   delete: (id: string) => api.delete(`/budgets/${id}`),
+};
+
+export const users = {
+  uploadAvatar: (formData: FormData) => api.post('/users/avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }),
+};
+
+export const notifications = {
+  getAll: () => api.get('/notifications'),
+  markAsRead: (id: string) => api.put(`/notifications/${id}/read`),
+  markAllAsRead: () => api.put('/notifications/read-all'),
+};
+
+export const data = {
+  export: () => api.get('/data/export', { responseType: 'blob' }),
+  exportPdf: () => api.get('/data/export-pdf', { responseType: 'blob' }),
+  import: (data: any) => api.post('/data/import', data),
 };
 
 export default api;

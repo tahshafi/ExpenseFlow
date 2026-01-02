@@ -27,7 +27,16 @@ const budgetSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-}, { timestamps: true });
+}, { 
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+      delete ret._id;
+    }
+  }
+});
 
 const Budget = mongoose.model('Budget', budgetSchema);
 export default Budget;

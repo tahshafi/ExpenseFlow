@@ -1,46 +1,116 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { IncomeTable } from '@/components/income/IncomeTable';
 import { AddIncomeDialog } from '@/components/income/AddIncomeDialog';
+import { IncomeFilters } from '@/components/income/IncomeFilters';
+import { IncomeAnalytics } from '@/components/income/IncomeAnalytics';
 import { income as incomeApi } from '@/lib/api';
-import { Income as IncomeType } from '@/types';
+import type { Income, TimeFilter } from '@/types';
 import { formatCurrency } from '@/lib/formatters';
-import { StatCard } from '@/components/dashboard/StatCard';
-import { Wallet, RefreshCw, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
 const Income = () => {
-  const [incomes, setIncomes] = useState<IncomeType[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('30d');
+  const [incomes, setIncomes] = useState<Income[]>([]);
+  const [editingIncome, setEditingIncome] = useState<Income | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
-    fetchIncome();
+    fetchIncomes();
   }, []);
 
-  const fetchIncome = async () => {
+  const fetchIncomes = async () => {
     try {
       const { data } = await incomeApi.getAll();
       setIncomes(data);
     } catch (error) {
       console.error(error);
-      toast.error('Failed to fetch income');
+      toast.error('Failed to fetch incomes');
     }
   };
 
-  const totalIncome = incomes.reduce((sum, i) => sum + i.amount, 0);
-  const recurringIncome = incomes
-    .filter(i => i.isRecurring)
-    .reduce((sum, i) => sum + i.amount, 0);
-  const oneTimeIncome = totalIncome - recurringIncome;
+  const filteredIncomes = useMemo(() => {
+    let filtered = [...incomes];
+
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        i => i.description.toLowerCase().includes(query) ||
+             i.source.toLowerCase().includes(query)
+      );
+    }
+
+    // Time filter
+    const now = new Date();
+    const filterDays: Record<TimeFilter, number> = {
+      '7d': 7,
+      '30d': 30,
+      '90d': 90,
+      '1y': 365,
+      'all': Infinity,
+    };
+    
+    if (timeFilter !== 'all') {
+      const daysBack = filterDays[timeFilter];
+      const cutoffDate = new Date(now.getTime() - daysBack * 24 * 60 * 60 * 1000);
+      filtered = filtered.filter(i => new Date(i.date) >= cutoffDate);
+    }
+
+    return filtered;
+  }, [incomes, searchQuery, timeFilter]);
+
+  const totalAmount = filteredIncomes.reduce((sum, i) => sum + i.amount, 0);
 
   const handleAddIncome = async (income: any) => {
     try {
-      const { data } = await incomeApi.create(income);
-      setIncomes([data, ...incomes]);
-      toast.success('Income added successfully');
+      let response;
+      if (income.id) {
+        response = await incomeApi.update(income.id, income);
+      } else {
+        response = await incomeApi.create(income);
+      }
+
+      const { data } = response;
+      
+      if (income.id) {
+        setIncomes(incomes.map(i => i.id === data.id ? data : i));
+        toast.success('Income updated successfully');
+      } else {
+        setIncomes([data, ...incomes]);
+        toast.success('Income added successfully');
+      }
+      setIsDialogOpen(false);
+      setEditingIncome(null);
     } catch (error) {
       console.error(error);
-      toast.error('Failed to add income');
+      toast.error('Failed to save income');
+    }
+  };
+
+  const handleEdit = (income: Income) => {
+    setEditingIncome(income);
+    setIsDialogOpen(true);
+  };
+
+  const handleDelete = async (income: Income) => {
+    try {
+      const incomeId = income.id || income._id;
+      if (!incomeId) {
+        toast.error('Invalid income ID');
+        return;
+      }
+      await incomeApi.delete(incomeId);
+      setIncomes(incomes.filter(i => i.id !== incomeId && i._id !== incomeId));
+      toast.success('Income deleted successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to delete income');
     }
   };
 
@@ -48,48 +118,38 @@ const Income = () => {
     <MainLayout>
       <PageHeader 
         title="Income" 
-        description="Track and manage your income sources"
-        actions={<AddIncomeDialog onAdd={handleAddIncome} />}
+        description={`${filteredIncomes.length} transactions • Total: ${formatCurrency(totalAmount)}`}
+        actions={
+          <Button className="btn-primary" onClick={() => setIsDialogOpen(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Income
+          </Button>
+        }
       />
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 mb-8">
-        <StatCard
-          title="Total Income"
-          value={totalIncome}
-          icon={Wallet}
-          variant="income"
-          delay={0}
-        />
-        <StatCard
-          title="Recurring Income"
-          value={recurringIncome}
-          icon={RefreshCw}
-          variant="accent"
-          delay={100}
-        />
-        <StatCard
-          title="One-time Income"
-          value={oneTimeIncome}
-          icon={TrendingUp}
-          variant="default"
-          delay={200}
-        />
-      </div>
+      <AddIncomeDialog 
+        onAdd={handleAddIncome}
+        open={isDialogOpen}
+        onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open) setEditingIncome(null);
+        }}
+        incomeToEdit={editingIncome}
+      />
+
+      <IncomeFilters
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        timeFilter={timeFilter}
+        onTimeFilterChange={setTimeFilter}
+      />
+
+      <IncomeAnalytics incomes={filteredIncomes} />
 
       <IncomeTable 
-        incomes={incomes}
-        onEdit={(income) => console.log('Edit:', income)}
-        onDelete={async (income) => {
-          try {
-            await incomeApi.delete(income.id);
-            setIncomes(incomes.filter(i => i.id !== income.id));
-            toast.success('Income deleted successfully');
-          } catch (error) {
-            console.error(error);
-            toast.error('Failed to delete income');
-          }
-        }}
+        incomes={filteredIncomes}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
     </MainLayout>
   );

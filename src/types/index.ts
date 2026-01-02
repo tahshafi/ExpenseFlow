@@ -22,6 +22,7 @@ export interface Expense {
 
 export interface Income {
   id: string;
+  _id?: string;
   userId: string;
   amount: number;
   source: string;
@@ -35,6 +36,7 @@ export interface Income {
 
 export interface Budget {
   id: string;
+  _id?: string;
   userId: string;
   category: ExpenseCategory;
   amount: number;
