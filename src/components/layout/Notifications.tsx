@@ -12,7 +12,8 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 interface Notification {
-  _id: string;
+  id: string;
+  _id?: string;
   title: string;
   message: string;
   isRead: boolean;

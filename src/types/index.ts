@@ -8,6 +8,7 @@ export interface User {
 
 export interface Expense {
   id: string;
+  _id?: string;
   userId: string;
   amount: number;
   category: ExpenseCategory;
