@@ -1,6 +1,7 @@
 import Expense from '../models/Expense.js';
 import Budget from '../models/Budget.js';
 import Notification from '../models/Notification.js';
+import { checkBudgetExceeded } from '../utils/budgetUtils.js';
 
 // @desc    Get expenses
 // @route   GET /api/expenses
@@ -34,48 +35,7 @@ export const addExpense = async (req, res) => {
 
     // Check Budget Exceeded
     const expenseDate = new Date(date);
-    const month = expenseDate.getMonth();
-    const year = expenseDate.getFullYear();
-
-    const budget = await Budget.findOne({
-      userId: req.user.id,
-      category: category,
-      month: month,
-      year: year
-    });
-
-    if (budget) {
-      const startOfMonth = new Date(year, month, 1);
-      const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59, 999);
-      
-      const expenses = await Expense.find({
-        userId: req.user.id,
-        category: category,
-        date: { $gte: startOfMonth, $lte: endOfMonth }
-      });
-      
-      const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
-
-      if (totalSpent > budget.amount) {
-        // Check if notification already exists for this month/category to avoid spamming? 
-        // For now, let's just create it.
-        await Notification.create({
-          userId: req.user.id,
-          title: 'Budget Exceeded',
-          message: `You have exceeded your ${category} budget for ${month + 1}/${year}. Budget: ${budget.amount}, Spent: ${totalSpent}`,
-          type: 'warning'
-        });
-      } else if (totalSpent > budget.amount * 0.9) {
-         // Check if already notified about being close?
-         // Simplification: just create.
-         await Notification.create({
-          userId: req.user.id,
-          title: 'Budget Alert',
-          message: `You are close to your ${category} budget for ${month + 1}/${year}. Budget: ${budget.amount}, Spent: ${totalSpent}`,
-          type: 'info'
-        });
-      }
-    }
+    await checkBudgetExceeded(req.user.id, category, expenseDate.getMonth(), expenseDate.getFullYear());
 
     res.status(201).json(expense);
   } catch (error) {

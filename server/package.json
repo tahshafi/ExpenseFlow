@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "seed": "node seeder.js",
+    "import-data": "node import_data.js"
   },
   "keywords": [],
   "author": "",

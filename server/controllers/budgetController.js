@@ -134,6 +134,9 @@ export const updateBudget = async (req, res) => {
 
     const updatedBudget = await budget.save();
 
+    // Check if updated budget is exceeded
+    await checkBudgetExceeded(req.user.id, updatedBudget.category, updatedBudget.month, updatedBudget.year);
+
     // Recalculate spent
     const startOfMonth = new Date(updatedBudget.year, updatedBudget.month, 1);
     const endOfMonth = new Date(updatedBudget.year, updatedBudget.month + 1, 0, 23, 59, 59, 999);

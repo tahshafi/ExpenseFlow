@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bell, Check } from 'lucide-react';
+import { Bell, Check, RefreshCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -38,8 +38,8 @@ export const Notifications = () => {
 
   useEffect(() => {
     fetchNotifications();
-    // Poll for notifications every minute
-    const interval = setInterval(fetchNotifications, 60000);
+    // Poll for notifications every 5 seconds for near real-time updates
+    const interval = setInterval(fetchNotifications, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -47,7 +47,7 @@ export const Notifications = () => {
     try {
       await notificationsApi.markAsRead(id);
       setNotifications(notifications.map(n => 
-        n._id === id ? { ...n, isRead: true } : n
+        (n.id === id || n._id === id) ? { ...n, isRead: true } : n
       ));
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (error) {
@@ -66,6 +66,10 @@ export const Notifications = () => {
     }
   };
 
+  const displayedNotifications = notifications
+    .filter(n => !n.isRead)
+    .slice(0, 5);
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
@@ -78,7 +82,18 @@ export const Notifications = () => {
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="end">
         <div className="flex items-center justify-between p-4 border-b">
-          <h4 className="font-semibold">Notifications</h4>
+          <div className="flex items-center gap-2">
+            <h4 className="font-semibold">Notifications</h4>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-6 w-6" 
+              onClick={() => fetchNotifications()}
+              title="Refresh notifications"
+            >
+              <RefreshCcw className="w-3 h-3" />
+            </Button>
+          </div>
           {unreadCount > 0 && (
             <Button variant="ghost" size="sm" onClick={handleMarkAllAsRead} className="text-xs h-auto py-1">
               Mark all read
@@ -86,13 +101,13 @@ export const Notifications = () => {
           )}
         </div>
         <ScrollArea className="h-[300px]">
-          {notifications.length === 0 ? (
+          {displayedNotifications.length === 0 ? (
             <div className="p-4 text-center text-muted-foreground text-sm">
-              No notifications
+              No new notifications
             </div>
           ) : (
             <div className="divide-y">
-              {notifications.map((notification) => (
+              {displayedNotifications.map((notification) => (
                 <div 
                   key={notification.id || notification._id} 
                   className={cn(

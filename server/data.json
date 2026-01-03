@@ -1,0 +1,343 @@
+{
+  "expenses": [
+    {
+      "amount": 45.50,
+      "category": "food",
+      "description": "Grocery shopping at Whole Foods",
+      "date": "2025-12-28T10:00:00.000Z",
+      "notes": "Weekly groceries",
+      "isWorthy": true,
+      "tags": ["essentials", "food"]
+    },
+    {
+      "amount": 12.00,
+      "category": "transport",
+      "description": "Uber ride to work",
+      "date": "2025-12-29T08:30:00.000Z",
+      "notes": "Raining heavily",
+      "isWorthy": false,
+      "tags": ["transport"]
+    },
+    {
+      "amount": 120.00,
+      "category": "utilities",
+      "description": "Electric Bill",
+      "date": "2025-12-25T14:00:00.000Z",
+      "notes": "December bill",
+      "isWorthy": true,
+      "tags": ["bills", "recurring"]
+    },
+    {
+      "amount": 65.00,
+      "category": "entertainment",
+      "description": "Movie night with friends",
+      "date": "2025-12-30T19:00:00.000Z",
+      "notes": "Tickets and snacks",
+      "isWorthy": true,
+      "tags": ["fun"]
+    },
+    {
+      "amount": 250.00,
+      "category": "shopping",
+      "description": "New Winter Jacket",
+      "date": "2025-12-20T11:00:00.000Z",
+      "notes": "Sale item",
+      "isWorthy": true,
+      "tags": ["clothing"]
+    },
+    {
+      "amount": 15.99,
+      "category": "subscriptions",
+      "description": "Netflix Subscription",
+      "date": "2026-01-01T09:00:00.000Z",
+      "notes": "Monthly",
+      "isWorthy": true,
+      "tags": ["recurring"]
+    },
+    {
+      "amount": 80.00,
+      "category": "healthcare",
+      "description": "Dental Checkup",
+      "date": "2025-12-15T10:00:00.000Z",
+      "notes": "Routine cleaning",
+      "isWorthy": true,
+      "tags": ["health"]
+    },
+    {
+      "amount": 45.00,
+      "category": "food",
+      "description": "Dinner at Italian Restaurant",
+      "date": "2025-12-31T20:00:00.000Z",
+      "notes": "New Year's Eve",
+      "isWorthy": true,
+      "tags": ["dining", "celebration"]
+    },
+    {
+      "amount": 30.00,
+      "category": "transport",
+      "description": "Gas Station",
+      "date": "2026-01-02T18:00:00.000Z",
+      "notes": "Full tank",
+      "isWorthy": true,
+      "tags": ["car"]
+    },
+    {
+      "amount": 200.00,
+      "category": "education",
+      "description": "Online Course: React Advanced",
+      "date": "2025-12-10T15:00:00.000Z",
+      "notes": "Udemy",
+      "isWorthy": true,
+      "tags": ["learning", "career"]
+    },
+    {
+      "amount": 5.50,
+      "category": "food",
+      "description": "Coffee",
+      "date": "2026-01-02T08:00:00.000Z",
+      "notes": "Morning coffee",
+      "isWorthy": false,
+      "tags": ["habit"]
+    },
+    {
+      "amount": 9.99,
+      "category": "subscriptions",
+      "description": "Spotify Premium",
+      "date": "2026-01-01T09:00:00.000Z",
+      "notes": "Monthly",
+      "isWorthy": true,
+      "tags": ["music"]
+    },
+    {
+      "amount": 1500.00,
+      "category": "rent",
+      "description": "January Rent",
+      "date": "2026-01-01T12:00:00.000Z",
+      "notes": "Paid via transfer",
+      "isWorthy": true,
+      "tags": ["bills", "housing"]
+    },
+    {
+      "amount": 85.00,
+      "category": "shopping",
+      "description": "Running Shoes",
+      "date": "2025-12-18T16:00:00.000Z",
+      "notes": "For jogging",
+      "isWorthy": true,
+      "tags": ["fitness"]
+    },
+    {
+      "amount": 25.00,
+      "category": "entertainment",
+      "description": "Books",
+      "date": "2025-12-22T14:00:00.000Z",
+      "notes": "Kindle store",
+      "isWorthy": true,
+      "tags": ["reading"]
+    }
+  ],
+  "incomes": [
+    {
+      "amount": 5000.00,
+      "source": "Salary",
+      "description": "December Salary",
+      "date": "2025-12-30T09:00:00.000Z",
+      "isRecurring": true,
+      "recurringFrequency": "monthly"
+    },
+    {
+      "amount": 1200.00,
+      "source": "Freelance",
+      "description": "Web Design Project",
+      "date": "2025-12-15T14:00:00.000Z",
+      "isRecurring": false
+    },
+    {
+      "amount": 300.00,
+      "source": "Dividends",
+      "description": "Stock Dividends",
+      "date": "2025-12-20T10:00:00.000Z",
+      "isRecurring": true,
+      "recurringFrequency": "monthly"
+    },
+    {
+      "amount": 50.00,
+      "source": "Side Project",
+      "description": "Sold old items",
+      "date": "2025-12-10T16:00:00.000Z",
+      "isRecurring": false
+    },
+    {
+      "amount": 5000.00,
+      "source": "Salary",
+      "description": "November Salary",
+      "date": "2025-11-30T09:00:00.000Z",
+      "isRecurring": true,
+      "recurringFrequency": "monthly"
+    },
+    {
+      "amount": 1000.00,
+      "source": "Bonus",
+      "description": "Year End Bonus",
+      "date": "2025-12-25T09:00:00.000Z",
+      "isRecurring": false
+    },
+    {
+      "amount": 200.00,
+      "source": "Rental",
+      "description": "Room Rental",
+      "date": "2026-01-01T10:00:00.000Z",
+      "isRecurring": true,
+      "recurringFrequency": "monthly"
+    },
+    {
+      "amount": 150.00,
+      "source": "Freelance",
+      "description": "Logo Design",
+      "date": "2025-12-05T11:00:00.000Z",
+      "isRecurring": false
+    },
+    {
+      "amount": 75.00,
+      "source": "Side Project",
+      "description": "Affiliate Income",
+      "date": "2025-12-28T09:00:00.000Z",
+      "isRecurring": false
+    },
+    {
+      "amount": 5000.00,
+      "source": "Salary",
+      "description": "January Salary (Advance)",
+      "date": "2026-01-28T09:00:00.000Z",
+      "isRecurring": true,
+      "recurringFrequency": "monthly"
+    },
+    {
+      "amount": 500.00,
+      "source": "Gift",
+      "description": "Birthday Gift",
+      "date": "2025-12-12T18:00:00.000Z",
+      "isRecurring": false
+    },
+    {
+      "amount": 250.00,
+      "source": "Investment",
+      "description": "Crypto Gains",
+      "date": "2025-12-22T15:00:00.000Z",
+      "isRecurring": false
+    },
+    {
+      "amount": 100.00,
+      "source": "Refund",
+      "description": "Tax Refund",
+      "date": "2025-12-01T10:00:00.000Z",
+      "isRecurring": false
+    },
+    {
+      "amount": 800.00,
+      "source": "Freelance",
+      "description": "Consulting",
+      "date": "2026-01-05T14:00:00.000Z",
+      "isRecurring": false
+    },
+    {
+      "amount": 60.00,
+      "source": "Side Project",
+      "description": "Etsy Sales",
+      "date": "2025-12-18T12:00:00.000Z",
+      "isRecurring": false
+    }
+  ],
+  "budgets": [
+    {
+      "category": "food",
+      "amount": 600.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "transport",
+      "amount": 200.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "entertainment",
+      "amount": 150.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "shopping",
+      "amount": 300.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "utilities",
+      "amount": 250.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "rent",
+      "amount": 1500.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "subscriptions",
+      "amount": 50.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "healthcare",
+      "amount": 200.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "education",
+      "amount": 100.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "travel",
+      "amount": 500.00,
+      "month": 0,
+      "year": 2026
+    },
+    {
+      "category": "food",
+      "amount": 550.00,
+      "month": 11,
+      "year": 2025
+    },
+    {
+      "category": "transport",
+      "amount": 180.00,
+      "month": 11,
+      "year": 2025
+    },
+    {
+      "category": "entertainment",
+      "amount": 200.00,
+      "month": 11,
+      "year": 2025
+    },
+    {
+      "category": "shopping",
+      "amount": 400.00,
+      "month": 11,
+      "year": 2025
+    },
+    {
+      "category": "utilities",
+      "amount": 220.00,
+      "month": 11,
+      "year": 2025
+    }
+  ]
+}

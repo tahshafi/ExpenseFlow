@@ -80,7 +80,7 @@ export const AddExpenseDialog = ({ onAdd, expenseToEdit, open: controlledOpen, o
       date: new Date(date),
       notes: notes || undefined,
       isWorthy,
-      id: expenseToEdit?.id,
+      id: expenseToEdit?.id || expenseToEdit?._id,
     });
 
     // toast.success(expenseToEdit ? 'Expense updated successfully' : 'Expense added successfully'); // Handled by parent
