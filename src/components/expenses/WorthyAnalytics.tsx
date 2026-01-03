@@ -21,7 +21,24 @@ export const WorthyAnalytics = ({ expenses }: WorthyAnalyticsProps) => {
   const notWorthyPercentage = total > 0 ? (notWorthyTotal / total) * 100 : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <Card className="bg-card/50 border-border">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Total Expenses
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-foreground">
+            {formatCurrency(total)}
+          </div>
+          <div className="flex items-center gap-2 mt-2">
+            <Progress value={100} className="h-2 bg-secondary" indicatorClassName="bg-primary" />
+            <span className="text-xs text-muted-foreground w-12 text-right">100%</span>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card className="bg-card/50 border-border">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">

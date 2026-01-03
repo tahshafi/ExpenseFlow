@@ -80,6 +80,7 @@ export interface DashboardStats {
     amount: number;
   };
   transactionCount: number;
+  currentMonthExpenses: Expense[];
 }
 
 export interface MonthlyData {
@@ -95,4 +96,4 @@ export interface CategoryData {
   color: string;
 }
 
-export type TimeFilter = '7d' | '30d' | '90d' | '1y' | 'all';
+export type TimeFilter = '7d' | '30d' | '90d' | '1y' | 'all' | 'this-month';

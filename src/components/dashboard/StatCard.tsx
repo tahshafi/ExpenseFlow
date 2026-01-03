@@ -5,7 +5,7 @@ import { formatCurrency, formatPercentage } from '@/lib/formatters';
 
 interface StatCardProps {
   title: string;
-  value: number;
+  value: number | string;
   change?: number;
   changeLabel?: string;
   icon: LucideIcon;
@@ -39,6 +39,10 @@ export const StatCard = ({
     expense: 'bg-expense/10 text-expense',
     accent: 'bg-accent/10 text-accent',
   };
+
+  const displayValue = typeof value === 'number' && isCurrency 
+    ? formatCurrency(value) 
+    : value.toLocaleString();
 
   return (
     <div 
@@ -81,7 +85,7 @@ export const StatCard = ({
         {/* Value */}
         <div className="mb-1">
           <p className="text-2xl lg:text-3xl font-bold text-foreground animate-number">
-            {isCurrency ? formatCurrency(value) : value.toLocaleString()}
+            {displayValue}
           </p>
         </div>
 

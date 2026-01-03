@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 const Expenses = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [timeFilter, setTimeFilter] = useState<TimeFilter>('30d');
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('this-month');
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -55,18 +55,25 @@ const Expenses = () => {
 
     // Time filter
     const now = new Date();
-    const filterDays: Record<TimeFilter, number> = {
-      '7d': 7,
-      '30d': 30,
-      '90d': 90,
-      '1y': 365,
-      'all': Infinity,
-    };
     
-    if (timeFilter !== 'all') {
+    if (timeFilter === 'this-month') {
+      filtered = filtered.filter(e => {
+        const d = new Date(e.date);
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      });
+    } else if (timeFilter !== 'all') {
+      const filterDays: Record<string, number> = {
+        '7d': 7,
+        '30d': 30,
+        '90d': 90,
+        '1y': 365,
+      };
+      
       const daysBack = filterDays[timeFilter];
-      const cutoffDate = new Date(now.getTime() - daysBack * 24 * 60 * 60 * 1000);
-      filtered = filtered.filter(e => new Date(e.date) >= cutoffDate);
+      if (daysBack) {
+        const cutoffDate = new Date(now.getTime() - daysBack * 24 * 60 * 60 * 1000);
+        filtered = filtered.filter(e => new Date(e.date) >= cutoffDate);
+      }
     }
 
     return filtered;

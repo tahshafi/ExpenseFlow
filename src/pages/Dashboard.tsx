@@ -11,7 +11,7 @@ import {
   calculateDashboardStats, 
   generateMonthlyData, 
   generateCategoryData 
-} from '@/lib/mockData';
+} from '@/lib/dashboardUtils';
 import { 
   Wallet, 
   TrendingUp, 
@@ -21,6 +21,7 @@ import {
 import { expenses as expensesApi, income as incomeApi, budgets as budgetsApi } from '@/lib/api';
 import { Expense, Income, Budget, DashboardStats, MonthlyData, CategoryData } from '@/types';
 import { toast } from 'sonner';
+import { WorthyAnalytics } from '@/components/expenses/WorthyAnalytics';
 
 const Dashboard = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -125,13 +126,18 @@ const Dashboard = () => {
         />
         <StatCard
           title="Savings Rate"
-          value={stats.savingsRate}
+          value={`${stats.savingsRate.toFixed(1)}%`}
           icon={TrendingUp}
           variant="accent"
           isCurrency={false}
           delay={300}
         />
       </div>
+
+      {/* <div className="mb-8">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Current Month Analysis</h3>
+        <WorthyAnalytics expenses={stats.currentMonthExpenses} />
+      </div> */}
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">

@@ -41,6 +41,7 @@ export const IncomeFilters = ({
           <SelectValue placeholder="Time Period" />
         </SelectTrigger>
         <SelectContent>
+          <SelectItem value="this-month">This Month</SelectItem>
           <SelectItem value="7d">Last 7 days</SelectItem>
           <SelectItem value="30d">Last 30 days</SelectItem>
           <SelectItem value="90d">Last 3 months</SelectItem>
